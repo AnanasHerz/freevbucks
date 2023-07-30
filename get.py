@@ -10,3 +10,4 @@ while '#shorts' in video['title']:
     video = response['items'][index]
 
 mrv = video['link']
+print(mrv)
