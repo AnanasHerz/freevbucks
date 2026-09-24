@@ -1,0 +1,25 @@
+name: Update redirect
+
+on:
+  schedule:
+    - cron: "0 14 * * *"    # once a day, 16:00 UTC+2 (14:00 UTC)
+  workflow_dispatch:        # "Run workflow" button on the Actions tab
+
+permissions:
+  contents: write
+
+concurrency: update-redirect
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 update.py
+      - name: Commit if the video changed
+        run: |
+          git diff --quiet && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898183+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Redirect to newest video"
+          git push
